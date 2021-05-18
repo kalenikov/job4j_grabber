@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 public class AppTest {
 
     @Test
-    public void thenTest(){
+    public void thenTest() {
         assertTrue(true);
     }
 
