@@ -25,15 +25,17 @@ public class AlertRabbit {
     }
 
     public static void insert(Connection cn, Long timestamp) throws SQLException {
-        PreparedStatement ps = cn.prepareStatement("insert into rabbit(created_date) values(?)");
-        ps.setLong(1, timestamp);
-        ps.execute();
+        try (PreparedStatement ps = cn.prepareStatement("insert into rabbit(created_date) values(?)")) {
+            ps.setLong(1, timestamp);
+            ps.execute();
+        }
     }
 
     public static void main(String[] args) {
         try (InputStream in = AlertRabbit.class.getClassLoader().getResourceAsStream("rabbit.properties")) {
             Properties props = new Properties();
             props.load(in);
+            in.close();
             Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
             scheduler.start();
             JobDataMap jobData = new JobDataMap();
