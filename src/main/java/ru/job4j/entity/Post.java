@@ -3,11 +3,26 @@ package ru.job4j.entity;
 import java.time.LocalDateTime;
 
 public class Post {
+    private int id;
+    private String name;
     private String text;
-    private LocalDateTime created_at;
+    private String link;
+    private LocalDateTime created;
 
-    public Post(String text, LocalDateTime created_at) {
+    public Post(String name, String text, String link, LocalDateTime created) {
+        this.name = name;
         this.text = text;
-        this.created_at = created_at;
+        this.link = link;
+        this.created = created;
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                ", name='" + name + '\'' +
+                ", text='" + text + '\'' +
+                ", link='" + link + '\'' +
+                ", created=" + created +
+                '}';
     }
 }
