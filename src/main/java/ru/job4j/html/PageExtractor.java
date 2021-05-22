@@ -6,15 +6,16 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public class PageLinksExtractor {
-    private static final String attr = "href";
+public class PageExtractor {
 
-    public static List<String> extract(Document document, String selector, int count) {
+    public List<String> extractLinks(Document doc, String selector, int count) {
+        Objects.requireNonNull(doc);
         List<String> rsl = new ArrayList<>();
-        Elements els = document.select(selector);
+        Elements els = doc.select(selector);
         for (Element el : els) {
-            rsl.add(el.attr(attr));
+            rsl.add(el.attr("href"));
             if (rsl.size() == count) {
                 break;
             }

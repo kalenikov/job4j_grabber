@@ -1,28 +1,45 @@
 package ru.job4j.html;
 
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import ru.job4j.entity.Post;
 import ru.job4j.grabber.utils.SqlRuDateTimeParser;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 
 public class PostExtractor {
-    public static void main(String[] args) throws IOException {
-        String url = "https://www.sql.ru/forum/1335775/nuzhen-senior-devops-s-angliyskim-3800-4800-v-mesyac-udalenno";
-        Document main = Jsoup.connect(url).get();
-        System.out.println(extract(main));
-    }
 
-    public static Post extract(Document doc) {
-        String name = doc.select(".messageHeader").first().text();
+    public Post extract(Document doc) {
+        Objects.requireNonNull(doc);
+        String name = doc.select(".messageHeader").first().text()
+                .replaceAll(" \\[new]","");
         String text = doc.select(".msgTable td:nth-child(2)").first().text();
-        String date = doc.select(".msgTable .msgFooter").first().ownText().substring(0, 16);
+        String date = doc.select(".msgTable .msgFooter").first()
+                .ownText()
+                .substring(0, 16)
+                .replaceAll("\\[]", "")
+                .trim();
         String link = doc.select("link[rel=canonical]").first().attr("href");
         return new Post(name,
                 text,
                 link,
                 new SqlRuDateTimeParser().parse(date));
+    }
+
+    public List<String> extractLinks(Document doc, String selector) {
+        Objects.requireNonNull(doc);
+        List<String> rsl = new ArrayList<>();
+        Elements els = doc.select(selector);
+        for (Element el : els) {
+            if (el.text().toLowerCase().startsWith("важно")) {
+                continue;
+            }
+            rsl.add(el.child(0).attr("href"));
+        }
+        return rsl;
     }
 }
