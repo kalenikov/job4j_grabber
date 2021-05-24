@@ -27,10 +27,11 @@ public class PostExtractor {
         String date = doc.select(".msgTable .msgFooter").first()
                 .ownText()
                 .substring(0, 16)
-                .replaceAll("\\[]", "")
+                .replaceAll("\\[", "")
+                .replaceAll("\\]", "")
                 .trim();
         String link = doc.select("link[rel=canonical]").first().attr("href");
-        int id = Integer.parseInt(link.split("//")[link.split("//").length-1]);
+        int id = Integer.parseInt(link.replaceAll("https://www.sql.ru/forum/", "").split("/")[0]);
         return new Post(
                 id,
                 name,
