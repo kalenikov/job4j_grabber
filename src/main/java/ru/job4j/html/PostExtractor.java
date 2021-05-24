@@ -30,7 +30,10 @@ public class PostExtractor {
                 .replaceAll("\\[]", "")
                 .trim();
         String link = doc.select("link[rel=canonical]").first().attr("href");
-        return new Post(name,
+        int id = Integer.parseInt(link.split("//")[link.split("//").length-1]);
+        return new Post(
+                id,
+                name,
                 text,
                 link,
                 dateTimeParser.parse(date));
