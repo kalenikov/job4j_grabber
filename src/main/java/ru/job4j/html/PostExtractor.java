@@ -13,10 +13,16 @@ import java.util.Objects;
 
 public class PostExtractor {
 
+    private SqlRuDateTimeParser dateTimeParser;
+
+    public PostExtractor() {
+        dateTimeParser = new SqlRuDateTimeParser();
+    }
+
     public Post extract(Document doc) {
         Objects.requireNonNull(doc);
         String name = doc.select(".messageHeader").first().text()
-                .replaceAll(" \\[new]","");
+                .replaceAll(" \\[new]", "");
         String text = doc.select(".msgTable td:nth-child(2)").first().text();
         String date = doc.select(".msgTable .msgFooter").first()
                 .ownText()
@@ -27,7 +33,7 @@ public class PostExtractor {
         return new Post(name,
                 text,
                 link,
-                new SqlRuDateTimeParser().parse(date));
+                dateTimeParser.parse(date));
     }
 
     public List<String> extractLinks(Document doc, String selector) {
