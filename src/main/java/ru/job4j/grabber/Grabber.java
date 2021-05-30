@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
@@ -76,7 +77,13 @@ public class Grabber implements Grab {
                     Socket socket = server.accept();
                     try (OutputStream out = socket.getOutputStream()) {
                         out.write("HTTP/1.1 200 OK\r\n\r\n".getBytes());
+                        String header = "<!DOCTYPE html>\n" +
+                                "<html lang=\"en\">\n" +
+                                "<head>\n" +
+                                "    <meta charset=\"utf-8\">";
+                        out.write(header.getBytes());
                         for (Post post : store.getAll()) {
+                            out.write("<br/>".getBytes());
                             out.write(post.toString().getBytes());
                             out.write(System.lineSeparator().getBytes());
                         }
@@ -93,9 +100,9 @@ public class Grabber implements Grab {
     public static void main(String[] args) throws Exception {
         Grabber grab = new Grabber();
         grab.cfg();
-        Scheduler scheduler = grab.scheduler();
+//        Scheduler scheduler = grab.scheduler();
         Store store = grab.store();
-        grab.init(new SqlRuParse(), store, scheduler);
+//        grab.init(new SqlRuParse(), store, scheduler);
         grab.web(store);
     }
 }
