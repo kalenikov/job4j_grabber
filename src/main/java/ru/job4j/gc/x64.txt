@@ -1,0 +1,31 @@
+HotSpot 64-bit VM, 8-byte align
+
+new User
+    header      16
+    int id      4
+    align       4
+    String name 8
+total           32
+
+User(1, "test")
+    header      16
+    int id      4
+    String name
+        new String
+            header              8
+            int (inner fields)  4 * 3 = 12
+            char[] link         4
+            total               24
+        new char[4]
+            header              8
+            size                4
+            chars               2 * 4 = 8
+            align               4
+            total               24
+        total 24 + 24 = 48
+    align 4
+total 16 + 4 + 48 + 4 = 72
+
+Размер памяти: 4194304 (4Мб)
+Всего поместится объектов: 4194304/72 = 58254, после этого должен отработать GC (в теории)
+
