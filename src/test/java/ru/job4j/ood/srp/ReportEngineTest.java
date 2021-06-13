@@ -3,6 +3,8 @@ package ru.job4j.ood.srp;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import ru.job4j.ood.srp.report.ReportEngine;
+import ru.job4j.ood.srp.report.formatter.JSONReportFormatter;
+import ru.job4j.ood.srp.report.formatter.XMLReportFormatter;
 import ru.job4j.ood.srp.report.store.Employee;
 import ru.job4j.ood.srp.report.store.MemStore;
 import ru.job4j.ood.srp.report.formatter.CSVReportFormatter;
@@ -79,6 +81,30 @@ public class ReportEngineTest {
         String expect = "name;hired;fired;salary;" + System.lineSeparator() +
                 "emp1;25-02-2020;25-02-2020;100.000;" + System.lineSeparator() +
                 "emp2;25-02-2020;25-02-2020;200.000;" + System.lineSeparator() ;
+        assertThat(engine.generate(), is(expect));
+    }
+
+    @Test
+    public void whenJsonGenerated() {
+        ReportEngine engine = new ReportEngine();
+        engine.setStore(store);
+        engine.setFormatter(new JSONReportFormatter());
+        String expect = "[" +
+                "{\"name\":\"emp1\",\"hired\":1582578000000,\"fired\":1582578000000,\"salary\":100.0}," +
+                "{\"name\":\"emp2\",\"hired\":1582578000000,\"fired\":1582578000000,\"salary\":200.0}" +
+                "]";
+        assertThat(engine.generate(), is(expect));
+    }
+
+    @Test
+    public void whenXMLGenerated() {
+        ReportEngine engine = new ReportEngine();
+        engine.setStore(store);
+        engine.setFormatter(new XMLReportFormatter());
+        String expect = "<ArrayList>" +
+                "<item><name>emp1</name><hired>1582578000000</hired><fired>1582578000000</fired><salary>100.0</salary></item>" +
+                "<item><name>emp2</name><hired>1582578000000</hired><fired>1582578000000</fired><salary>200.0</salary></item>" +
+                "</ArrayList>";
         assertThat(engine.generate(), is(expect));
     }
 }
