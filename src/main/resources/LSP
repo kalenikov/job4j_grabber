@@ -1,0 +1,33 @@
+// Базоый класс (устанавливает соединение в пассивном режиме, т.е не поддерживает входящие подключения)
+pubic class FTPConnection {
+    pubic FTPConnection(Port commandPort, Port dataPort){
+        if (dataPort.get() < 1000) throw new IllegalPortException() 
+    }
+    pubic connect(String address, Port commandPort){}
+    pubic upload(String path){
+        if (!path.endsWith("*.csv"))throw new IllegalExtensionException() 
+    }
+}
+
+// Пример 1. В подклассе усилена проверка аргументов (т.к требуется открытый порт для входящих подключений)
+pubic class ActiveFTPConnection extends FTPConnection {
+    @Override
+    pubic connect(String address, Port commandPort){
+        if (!dataPort.isOpen()) throw new IllegalPortException() 
+    }
+}
+
+// Пример 2. В подклассе ослаблена проверка возвращаемого значения (может отправлять не только CSV-файлы)
+pubic class ActiveFTPConnection extends FTPConnection {
+    @Override
+    pubic upload(String path){
+        if (!path.endsWith("*.csv")) LOG.warning("file extension is not csv")
+    }
+}
+
+// Пример 3. В подклассе не сохраняются условия базового класса (изменили диапазон допустимых портов)
+pubic class ActiveFTPConnection extends FTPConnection {
+    pubic FTPConnection(Port commandPort, Port dataPort){
+        if (dataPort.get() < 2000) throw new IllegalPortException() 
+    }
+}
