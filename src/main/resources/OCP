@@ -1,0 +1,52 @@
+
+Пример 1.
+Класс, который отправляет отчеты на ФТП. 
+Если мы захотим добавить отправку отчетов через REST, придется дописывать логику.
+class ReportSender{
+    public void send(Report report){
+        FTPConnection ftp = new FTPConnection()
+        ftp.send(report);
+    }
+}
+
+Правильно: вынести взаимодействие классов на уровень интерфейсов 
+interface Connection{
+    public send(Report report)
+}
+
+clase FTPConnection implements Connection{
+    @Override
+    public void send(Report report){} 
+}
+
+clase HTTPConnection implements Connection{
+    @Override
+    public void send(Report report){} 
+}
+
+class ReportSender{
+    public void send(Report report){
+        Connection cn = new Connection()
+        cn.send(report);
+    }
+}
+
+2. В классе собрана логика рассчета итогов по разным видам документов (если появится новый вид документов, придется менять класс TotalsCalculator). Правильно: вынести метод рассчета в интерфейс, который должны наследовать документы. Т.е каждый документ должен сам знать как рассчитывать свои итоги
+
+public class TotalsCalculator {
+    public int getTotalFrom(Document document) {
+        int rsl = 0;
+        for (Item items : document.getItems()) {
+            if (document instanceof ReceiptOfGoods) {
+                rsl += items.getCount() * items.getPrice() * items.getTaxRate();
+            } else if (document instanceof MovingGoods) {
+                rsl += items.getCount() * items.getCostPrice();
+            } else {
+                rsl += items.getCount() * items.getPrice();
+            }
+        }
+        return rsl;
+    }
+}
+
+3. Пример житейский: производитель выпускает устройство старого форм-фактора, но с новым разъемом зарядки и пользователи должны искать и использовать адаптеры, чтобы применять старые кабели, либо покупать новые.

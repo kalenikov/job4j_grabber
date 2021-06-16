@@ -1,0 +1,33 @@
+Придумать 3 примера на нарушение принципа SRP
+
+Пример 1.
+Grabber представляет god-объект, который слишком много умеет, его нужно разделить на части
+public interface Grabber {
+    public String[] grabe(String URL)
+    public void setProxy(Proxy proxy)
+    public void save(Item item)
+    public void publish(Connection cn)
+}
+
+
+Пример 2.
+В модели данных заказа есть методы, которые отвечают за бизнес-логику расчета бонусов и за отправку заказа в очередь, нужно их вынести в отдельные сущности.
+public class Order {
+    int id;
+    OrderItems[] items;
+    public add(OrderItems item){}
+    public calculateCompanyBonus(){}
+    public publishToRabbit(){}
+}
+
+Пример 3.
+Класс задачи должен контролировать количество своих экземпляров, это тоже нарушение SRP
+public class Task {
+    private int id;
+    public Task(){
+        id++
+        if (id = MAX_TASK_COUNT) throw new MaxTaskCountException();
+    }
+}
+
+При этом в стремлении максимально декомпозировать логику нужно знать меру и соблюдать правило "то, что изменяется вместе, дожно хранится в одном месте". Например, бывает сложная бизнес-логика, которую не имеет смыла разбивать на части, потому что она(логика) в каком-то конкретном случае представляет единое целое.
