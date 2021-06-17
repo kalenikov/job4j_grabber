@@ -16,4 +16,6 @@ public interface ParkingService {
     void park(Car car);
 
     void unpark(Car car);
+
+    int getAvailableSpace();
 }

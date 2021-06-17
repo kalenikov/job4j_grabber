@@ -1,10 +1,10 @@
 package ru.job4j.ood.parking.car;
 
 public abstract class AbstractCar implements Car {
-    private int size;
-    private int id;
+    private final int id;
+    private final int size;
 
-    public AbstractCar(int size, int id) {
+    public AbstractCar(int id, int size) {
         this.size = size;
         this.id = id;
     }
