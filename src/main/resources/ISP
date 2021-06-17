@@ -1,0 +1,42 @@
+ISP
+
+Пример 1. 
+Есть интерфейс для отправки отчетов в REST API поставщика
+public interface ReportSender(){
+    void send(Report report)
+}
+
+появился новый поставщик, у которого API закрыт авторизацией на основе токена, поэтому в интерфейс добавили новый метод, который нарушает ISP:
+public interface ReportSender(){
+    void send(Report report)
+    String getToken(String url, Credentials creds)
+}
+
+Правильно выделить getToken() в отдельный интерфейс, чтобы старым реализациям ReportSender не пришлось делать заглушки
+public interface ReportSender(){
+    void send(Report report)
+}
+public interface TokenRecepient(){
+    String getToken(String url, Credentials creds)
+}
+public interface ReportTokenizedSender extend ReportSender, TokenRecepient(){}
+
+
+Пример 2. Нарушение ISP 
+public interface ReportPrinter(){
+    void printPDF(Report report)
+    void printDoc(Report report)
+    void printHTML(Report report)
+    void printXML(Report report)
+}
+
+Пример 3. Нарушение ISP 
+public interface ReportStringWriter(){
+    void writeNode(XMLNode node);
+    void writeChildren(XMLNode node, List<XMLNode> children);
+    void writeSeparatedString(String string);
+    void writeMetatags();
+    void writeHeaders(List<String> columns);
+    void writeDocVersion();
+    void writeDescription(String description);
+}
