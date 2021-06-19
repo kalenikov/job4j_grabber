@@ -2,7 +2,7 @@ package ru.job4j.ood.parking;
 
 import ru.job4j.ood.parking.car.Car;
 
-import java.util.Collection;
+import java.util.List;
 
 public class Parking implements ParkingService {
     private final StorageService storage;
@@ -12,7 +12,7 @@ public class Parking implements ParkingService {
     }
 
     @Override
-    public Collection<Car> getAllCars() {
+    public List<Car> getAllCars() {
         return null;
     }
 
