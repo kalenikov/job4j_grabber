@@ -4,4 +4,9 @@ public class CargoCar extends AbstractCar {
     public CargoCar(int id, int size) {
         super(id, size);
     }
+
+    @Override
+    public String toString() {
+        return "CargoCar " + super.getId();
+    }
 }

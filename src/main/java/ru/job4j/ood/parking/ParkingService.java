@@ -13,9 +13,9 @@ public interface ParkingService {
 
     Car info(int id);
 
-    void park(Car car);
+    void park(Car car) throws ParkingException;
 
-    void unpark(Car car);
+    void unpark(Car car) throws ParkingException;
 
     int getAvailableSpace();
 }

@@ -13,27 +13,27 @@ public class Parking implements ParkingService {
 
     @Override
     public List<Car> getAllCars() {
-        return null;
+        return storage.getAll();
     }
 
     @Override
     public Car info(int id) {
-        return null;
+        return storage.get(id);
     }
 
     @Override
-    public void park(Car car) {
-
+    public void park(Car car) throws ParkingException {
+        storage.add(car);
     }
 
     @Override
-    public void unpark(Car car) {
-
+    public void unpark(Car car) throws ParkingException {
+        storage.remove(car);
     }
 
     @Override
     public int getAvailableSpace() {
-        return 0;
+        return storage.getAvailableSpace();
     }
 
 }

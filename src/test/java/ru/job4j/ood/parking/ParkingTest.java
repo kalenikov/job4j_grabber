@@ -21,7 +21,7 @@ public class ParkingTest {
     @BeforeAll
     static void setUp() {
         List.of(1, 2, 3).forEach(id -> cargoCars.add(new CargoCar(id, CARGO_SIZE)));
-        List.of(1, 2, 3).forEach(id -> pasCars.add(new PassengerCar(id)));
+        List.of(4, 5, 6).forEach(id -> pasCars.add(new PassengerCar(id)));
     }
 
     @BeforeEach
@@ -32,7 +32,7 @@ public class ParkingTest {
     @Nested
     class ValidCases {
         @Test
-        void park() {
+        void park() throws ParkingException {
             parking.park(cargoCars.get(0));
             parking.park(pasCars.get(0));
             assertEquals(parking.getAllCars(), List.of(cargoCars.get(0), pasCars.get(0)));
@@ -41,14 +41,15 @@ public class ParkingTest {
 
         @Test
         @DisplayName("checking cars information")
-        void info() {
-            assertEquals(parking.info(2), cargoCars.get(2));
+        void info() throws ParkingException {
+            parking.park(cargoCars.get(2));
+            assertEquals(parking.info(3), cargoCars.get(2));
             assertNull(parking.info(100));
         }
 
         @Test
         @DisplayName("parking and un-parking flow")
-        void parkingFlow() {
+        void parkingFlow() throws ParkingException {
             parking.park(cargoCars.get(0));
             parking.park(pasCars.get(0));
             parking.park(pasCars.get(1));
@@ -67,7 +68,7 @@ public class ParkingTest {
     class InvalidCases {
         @Test
         @DisplayName("attempt to re-park the same car")
-        void repeatedPark() {
+        void repeatedPark() throws ParkingException {
             parking.park(cargoCars.get(0));
             ParkingException ex = assertThrows(ParkingException.class, () -> {
                 parking.park(cargoCars.get(0));
@@ -77,19 +78,19 @@ public class ParkingTest {
 
         @Test
         @DisplayName("attempt to overload the parking size")
-        void overloadPark() {
+        void overloadPark() throws ParkingException {
             parking.park(cargoCars.get(0));
             parking.park(cargoCars.get(1));
             parking.park(cargoCars.get(2));
             ParkingException ex = assertThrows(ParkingException.class, () -> {
                 parking.park(pasCars.get(0));
             });
-            assertEquals(ex.getMessage(), "not enough space for car 1");
+            assertEquals(ex.getMessage(), "not enough space for car 4");
         }
 
         @Test
         @DisplayName("attempt to unpark a car that is not in the parking")
-        void invalidUnpark() {
+        void invalidUnpark() throws ParkingException {
             ParkingException ex = assertThrows(ParkingException.class, () -> {
                 parking.unpark(cargoCars.get(0));
             });
@@ -98,7 +99,7 @@ public class ParkingTest {
 
         @Test
         @DisplayName("attempt to repeat parking cargo in previously free slot")
-        void invalidParkingFlow() {
+        void invalidParkingFlow() throws ParkingException {
             parking.park(cargoCars.get(0));
             parking.park(pasCars.get(0));
             parking.park(cargoCars.get(1));
@@ -115,7 +116,7 @@ public class ParkingTest {
             ParkingException ex = assertThrows(ParkingException.class, () -> {
                 parking.park(cargoCars.get(1));
             });
-            assertEquals(ex.getMessage(), "not enough space for car 1");
+            assertEquals(ex.getMessage(), "not enough space for car 2");
         }
     }
 }
