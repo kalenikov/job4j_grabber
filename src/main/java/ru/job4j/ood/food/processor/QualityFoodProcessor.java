@@ -36,6 +36,11 @@ public class QualityFoodProcessor implements FoodProcessor {
         foods.forEach(this::processFood);
     }
 
+    @Override
+    public void resort(List<Food> items) {
+        process(items);
+    }
+
     private void processFood(Food food) {
         processStorageRules(food, DateUtils.getPercentRemainToExpiration(food, now));
         processFoodRules(food, DateUtils.getPercentRemainToExpiration(food, now));

@@ -3,8 +3,8 @@ package ru.job4j.ood.food;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import ru.job4j.ood.food.model.BalancedFoodStorage;
 import ru.job4j.ood.food.model.Food;
-import ru.job4j.ood.food.model.FoodStorage;
 import ru.job4j.ood.food.processor.QualityFoodProcessor;
 import ru.job4j.ood.food.rule.DiscountRule;
 import ru.job4j.ood.food.rule.StorageRule;
@@ -17,17 +17,17 @@ import static org.hamcrest.Matchers.is;
 
 public class QualityFoodProcessorTest {
     private static QualityFoodProcessor qfc;
-    private static FoodStorage shop;
-    private static FoodStorage warehouse;
-    private static FoodStorage trash;
+    private static BalancedFoodStorage shop;
+    private static BalancedFoodStorage warehouse;
+    private static BalancedFoodStorage trash;
     private static Food food1;
     private static Food food2;
 
     @BeforeClass
     public static void setUp() {
-        shop = new FoodStorage();
-        warehouse = new FoodStorage();
-        trash = new FoodStorage();
+        shop = new BalancedFoodStorage();
+        warehouse = new BalancedFoodStorage();
+        trash = new BalancedFoodStorage();
 
         List<StorageRule> storageRules = List.of(
                 new StorageRule(p -> p <= 0, trash),
@@ -96,5 +96,30 @@ public class QualityFoodProcessorTest {
         qfc.setNow(LocalDate.of(2020, 1, 10));
         qfc.process(List.of(food1));
         assertThat(food1.getDiscount(), is(0.0));
+    }
+
+    @Test
+    public void whenResort() {
+        // pass 20% expiration date: expected location is shop
+        qfc.setNow(LocalDate.of(2020, 1, 20));
+        qfc.resort(List.of(food1));
+        assertThat(trash.getAll(), is(List.of()));
+        assertThat(shop.getAll(), is(List.of(food1)));
+        assertThat(warehouse.getAll(), is(List.of()));
+
+        // pass 60% expiration date: expected location is warehouse
+        qfc.setNow(LocalDate.of(2020, 3, 1));
+        qfc.resort(List.of(food1));
+        assertThat(trash.getAll(), is(List.of()));
+        assertThat(shop.getAll(), is(List.of()));
+        assertThat(warehouse.getAll(), is(List.of(food1)));
+
+        // pass 100% expiration date: expected location is trash
+        qfc.setNow(LocalDate.of(2021, 1, 20));
+        qfc.resort(List.of(food1));
+        assertThat(trash.getAll(), is(List.of(food1)));
+        assertThat(shop.getAll(), is(List.of()));
+        assertThat(warehouse.getAll(), is(List.of()));
+
     }
 }
