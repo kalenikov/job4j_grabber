@@ -11,8 +11,24 @@ import java.util.concurrent.TimeUnit;
 
 public class PhantomDemo {
 
-    private static class MyPhantom extends PhantomReference<String> {
+    private class TestClass {
+        private StringBuffer data;
 
+        public TestClass() {
+            this.data = new StringBuffer();
+            for (long i = 0; i < 50000000; i++) {
+                this.data.append('x');
+            }
+        }
+
+        @Override
+        protected void finalize() {
+            System.out.println("У объекта TestClass вызван метод finalize!!!");
+        }
+    }
+
+
+    private static class MyPhantom extends PhantomReference<String> {
         private String name;
 
         public MyPhantom(String referent, ReferenceQueue<? super String> q, String name) {
@@ -29,7 +45,6 @@ public class PhantomDemo {
     private static class PhantomStorage {
 
         private ReferenceQueue<String> queue = new ReferenceQueue<>();
-
         private List<MyPhantom> phantoms = new LinkedList<>();
 
         public void add(String someData) {

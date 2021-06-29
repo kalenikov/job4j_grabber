@@ -10,15 +10,17 @@ import java.util.concurrent.TimeUnit;
 public class WeakDemo {
 
     public static void main(String[] args) throws InterruptedException {
-        example1();
+//        example1();
 //        example2();
+        example3();
     }
 
     private static void example1() throws InterruptedException {
+        System.out.println("example1");
         Object object = new Object() {
             @Override
             protected void finalize() throws Throwable {
-                System.out.println("Removed");
+                System.out.println("void finalize");
             }
         };
         WeakReference<Object> weak = new WeakReference<>(object);
@@ -29,12 +31,13 @@ public class WeakDemo {
     }
 
     private static void example2() throws InterruptedException {
+        System.out.println("example2");
         List<WeakReference<Object>> objects = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            objects.add(new WeakReference<Object>(new Object() {
+            objects.add(new WeakReference<>(new Object() {
                 @Override
-                protected void finalize() throws Throwable {
-                    System.out.println("Removed!");
+                protected void finalize() {
+                    System.out.println("void finalize");
                 }
             }));
         }
@@ -43,10 +46,11 @@ public class WeakDemo {
     }
 
     private static void example3() throws InterruptedException {
+        System.out.println("example3");
         Object object = new Object() {
             @Override
-            protected void finalize() throws Throwable {
-                System.out.println("Removed");
+            protected void finalize(){
+                System.out.println("void finalize");
             }
         };
         ReferenceQueue<Object> queue = new ReferenceQueue<>();
