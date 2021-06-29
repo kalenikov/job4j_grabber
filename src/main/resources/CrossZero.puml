@@ -1,0 +1,48 @@
+@startuml
+
+interface Game
+interface Input
+interface Output
+abstract  BaseGame
+class ConsoleGame
+class WebGame
+class BaseGame
+class ConsoleGame
+
+
+'*-- композиция (состоит)
+'o-- агрегация (содержит)
+'A --|> B, генерализация (мой генерал, наследуется)
+'A extend B
+'A ..|> B, реализация
+'A implements B
+'.., -- циклическая зависимость
+'A --> B зависимость (А вызывает B)
+
+Game <|..BaseGame
+BaseGame <|-d- ConsoleGame
+BaseGame <|-- WebGame
+Input <|-u- ConsoleInput
+Output <|-u- ConsoleOutput
+ConsoleGame o-- ConsoleInput
+ConsoleGame o-- ConsoleOutput
+
+
+'abstract class AbstractList
+'abstract AbstractCollection
+'interface List
+'interface Collection
+'
+'List <|-- AbstractList
+'Collection <|-- AbstractCollection
+'
+'Collection <|- List
+'AbstractCollection <|- AbstractList
+'AbstractList <|-- ArrayList
+'
+'class ArrayList {
+'Object[] elementData
+'size()
+'}
+
+@enduml
