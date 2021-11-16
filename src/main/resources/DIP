@@ -1,6 +1,6 @@
 
 
-public class ReportProcessor(){
+public class ReportProcessor() {
     private ReportSender reportSender; 
     private ReportBuilder reportBuilder = new ReportBuilder() 
 
@@ -11,13 +11,12 @@ public class ReportProcessor(){
     public void process() {
         reportSender.send();
     }
-
-     public void build() {
+    public void build() {
         reportBuilder.build();
     }
 }
 
-Примеры нарушения DIP:
-1. если ReportSender - это класс
-3. если ReportSender - это интерфейс, который находится в одном пакете со своей реализацией
-4. ReportProcessor зависит от реализации ReportBuilder
+// Примеры нарушения DIP:
+// 1. если ReportSender - это класс
+// 3. если ReportSender - это интерфейс, который находится в одном пакете со своей реализацией
+// 4. ReportProcessor зависит от реализации ReportBuilder
